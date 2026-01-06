@@ -2,10 +2,15 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
-// Serve static files from "public" folder
+// Static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Root route
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.status(200).send('OK');
+});
+
+// Main route
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -15,18 +20,8 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Azure-friendly port
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-    console.log(`🚀 Tourism Website running on port ${PORT}`);
-});
-
-// Error handling
-process.on('uncaughtException', (err) => {
-    console.error('Uncaught Exception:', err);
-});
-
-process.on('unhandledRejection', (reason) => {
-    console.error('Unhandled Rejection:', reason);
+    console.log(`App running on port ${PORT}`);
 });
